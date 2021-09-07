@@ -18,3 +18,8 @@ class Quotes_Spider(scrapy.Spider):
             items['tag'] = tags
 
             yield items
+
+        next_page = response.xpath('//li[@class="next"]/a/@href').get()
+
+        if next_page is not None:
+            response.follow(next_page, callback=self.parse)
