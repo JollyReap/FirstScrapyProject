@@ -4,7 +4,8 @@ from ..items import CourseItem
 
 class Quotes_Spider(scrapy.Spider):
     name = 'quotes'
-    start_urls = ['https://quotes.toscrape.com/']
+    page_nom = 2
+    start_urls = ['https://quotes.toscrape.com/page/1/']
 
     def parse(self, response, **kwargs):
         items = CourseItem()
@@ -19,7 +20,8 @@ class Quotes_Spider(scrapy.Spider):
 
             yield items
 
-        next_page = response.xpath('//li[@class="next"]/a/@href').get()
+        next_page = 'https://quotes.toscrape.com/page/'+str(Quotes_Spider.page_nom)+'/'
 
-        if next_page is not None:
+        if Quotes_Spider.page_nom < 11:
+            Quotes_Spider.page_nom += 1
             response.follow(next_page, callback=self.parse)
